@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "53122842262",
+    "firebase_url": "https://shoefitapp-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "shoefitapp",
+    "storage_bucket": "shoefitapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:53122842262:android:6f240017797107854fccb7",
+        "android_client_info": {
+          "package_name": "com.example.shoefit_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhOY4QndH02VNIfjA5t1A1T7PdPqTrkJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:53122842262:android:ca9a9dfd7d68521c4fccb7",
+        "android_client_info": {
+          "package_name": "com.example.shoefit_application_new"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhOY4QndH02VNIfjA5t1A1T7PdPqTrkJ0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,45 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "shoefit_application_new",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "shoefit_application_new (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "shoefit_application_new (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "tflite_flutter",
+            "cwd": "packages\\tflite_flutter",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "tflite_flutter (profile mode)",
+            "cwd": "packages\\tflite_flutter",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "tflite_flutter (release mode)",
+            "cwd": "packages\\tflite_flutter",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        }
+    ]
+}

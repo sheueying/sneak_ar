@@ -1,0 +1,131 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // Users collection
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow update: if isAuthenticated() && isOwner(userId);
+      allow create: if isAuthenticated();
+
+      match /addresses/{addressId} {
+        allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+      match /favourites/{favId} {
+        allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+      match /recent_views/{productId} {
+        allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+      match /foot_measurements/{measurementId} {
+        allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+      match /virtual_try_ons/{tryOnId} {
+        allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+      match /shop_ratings/{raterId} {
+        allow read: if true;
+        allow write: if isAuthenticated() && isOwner(raterId);
+      }
+      match /vouchers/{voucherId} {
+        allow read, write: if isAuthenticated() && isOwner(userId);
+      }
+    }
+
+    // AR Sessions collection
+    match /ar_sessions/{sessionId} {
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow list: if isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    // Products collection
+    match /products/{productId} {
+      allow read: if true;
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.sellerId;
+      allow delete: if isAuthenticated() && request.auth.uid == resource.data.sellerId;
+      allow update: if isAuthenticated() && request.auth.uid == resource.data.sellerId;
+    }
+
+    // Carts collection
+    match /carts/{userId}/items/{itemId} {
+      allow read, write: if isAuthenticated() && isOwner(userId);
+    }
+
+    // Sellers collection
+    match /sellers/{sellerId} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && request.resource.data.uid == request.auth.uid;
+
+      // Refunds subcollection (for refund tracking)
+      match /refunds/{refundId} {
+        allow read: if isAuthenticated() && (isOwner(sellerId) || isOwner(resource.data.buyerId));
+        allow write: if isAuthenticated() && isOwner(sellerId);
+      }
+    }
+
+    // Withdrawals collection
+    match /withdrawals/{withdrawalId} {
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow get: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow list: if isAuthenticated();
+    }
+
+    // Orders collection - Simplified and more permissive
+    match /orders/{orderId} {
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId;
+      allow read: if isAuthenticated() && (
+        request.auth.uid == resource.data.userId || 
+        request.auth.uid in resource.data.sellerIds ||
+        request.auth.uid == resource.data.sellerId
+      );
+      allow update: if isAuthenticated() && (
+        request.auth.uid == resource.data.userId || 
+        request.auth.uid in resource.data.sellerIds ||
+        request.auth.uid == resource.data.sellerId
+      );
+      allow delete: if isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    // Vouchers collection
+    match /vouchers/{voucherId} {
+      allow read: if isAuthenticated();
+    }
+
+    // Chats (Customer-Seller)
+    match /chats/{chatId} {
+      allow read, write: if isAuthenticated() && (
+        request.auth.uid in resource.data.users ||
+        request.auth.uid == resource.data.customerId ||
+        request.auth.uid == resource.data.sellerId
+      );
+      allow create: if isAuthenticated() && request.auth.uid in request.resource.data.users;
+
+      match /messages/{messageId} {
+        allow read, write: if isAuthenticated() && (
+          request.auth.uid in get(/databases/$(database)/documents/chats/$(chatId)).data.users ||
+          request.auth.uid == get(/databases/$(database)/documents/chats/$(chatId)).data.customerId ||
+          request.auth.uid == get(/databases/$(database)/documents/chats/$(chatId)).data.sellerId
+        );
+      }
+    }
+
+    // Analytics collection
+    match /analytics/{sellerId} {
+      allow read, write: if isAuthenticated() && isOwner(sellerId);
+
+      match /visitors/{dateId} {
+        allow read, write: if isAuthenticated() && isOwner(sellerId);
+      }
+    }
+  }
+} 
